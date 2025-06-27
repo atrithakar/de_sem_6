@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>🌾 Farm Assistant Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🌾 Farm Assistant Dashboard</h1>
+
+        <div class="card">
+            <h2>Sensor Readings</h2>
+            <p>🌡️ Temperature: <span id="temp"></span> °C</p>
+            <p>💧 Humidity: <span id="humidity"></span> %</p>
+            <p>🌊 Water Level: <span id="water-level"></span></p>
+        </div>
+
+        <div class="card-row">
+            <!-- Suggestions Box -->
+            <div class="card flex-child">
+                <h2>🔔 Suggestions</h2>
+                <ul id="suggestions"></ul>
+            </div>
+
+            <!-- Device Status Box -->
+            <div class="card flex-child">
+                <h2>🔌 Device Status</h2>
+                <p>💦 Water Pump: <span id="pump-status" class="status-dot">OFF</span></p>
+                <p>❄️ AC / Fan: <span id="ac-status" class="status-dot">OFF</span></p>
+                <p>🌫 Humidifier: <span id="humidifier-status" class="status-dot">OFF</span></p>
+            </div>
+        </div>
+
+
+        <div class="card">
+            <h2>📈 History Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Temp (°C)</th>
+                        <th>Humidity (%)</th>
+                        <th>Water Level</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>
