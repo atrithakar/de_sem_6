@@ -48,6 +48,18 @@ async def get_history():
         history.append(r)
     return JSONResponse(content=history[::-1])  # Return in chronological order
 
+@app.get("/visualise", response_class=HTMLResponse)
+async def visualise_page(request: Request):
+    return templates.TemplateResponse("visualise.html", {"request": request})
+
+@app.get("/api/live_stream")
+async def live_stream():
+    # Return latest data (already sanitized)
+    safe_data = latest_data.copy()
+    if "_id" in safe_data:
+        safe_data["_id"] = str(safe_data["_id"])
+    return JSONResponse(content=safe_data)
+
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
