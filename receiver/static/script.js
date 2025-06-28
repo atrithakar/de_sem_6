@@ -33,7 +33,8 @@ async function updateDashboard() {
 
     document.getElementById("temp").textContent = data.temperature;
     document.getElementById("humidity").textContent = data.humidity;
-    document.getElementById("water-level").textContent = waterLevel(data.soil_moisture);
+    // document.getElementById("water-level").textContent = waterLevel(data.soil_moisture);
+    document.getElementById("water-level").textContent = data.soil_moisture;
 
     const suggestionsList = document.getElementById("suggestions");
     suggestionsList.innerHTML = "";
@@ -45,7 +46,7 @@ async function updateDashboard() {
     });
 
     // Device status logic
-    const pump = data.soil_moisture < 65 || data.soil_moisture > 80;
+    const pump = data.soil_moisture < 65 /* || data.soil_moisture > 80 */;
     const ac = data.temperature < 15 || data.temperature > 24;
     const humidifier = data.humidity < 60 || data.humidity > 80;
 
@@ -68,7 +69,8 @@ async function updateHistory() {
     const row = document.createElement("tr");
 
     const ts = new Date(entry.timestamp).toLocaleTimeString();
-    const water = waterLevel(entry.soil_moisture);
+    // const water = waterLevel(entry.soil_moisture);
+    const water = entry.soil_moisture;
 
     row.innerHTML = `
       <td>${ts}</td>
