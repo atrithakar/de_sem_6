@@ -55,3 +55,20 @@ th, td {
   background-color: #e74c3c; /* red */
   color: white;
 }
+
+.btn {
+    background: #255148;
+    color: #d2ea99;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.btn:hover {
+    background: #d2ea99;
+    color: #255148;
+}
+
