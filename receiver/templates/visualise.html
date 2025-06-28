@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>📊 Live Sensor Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5faf5;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #back-btn {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #255148;
+            color: #d2ea99;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #back-btn:hover {
+            background: #d2ea99;
+            color: #255148;
+        }
+
+        .chart-container {
+            width: 95%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 350px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="back-btn" onclick="window.location.href='/'">🔙 Back to Dashboard</button>
+    <h2>📊 Live Sensor Visualisation</h2>
+
+    <div class="chart-container">
+        <h3>🌡️ Temperature (°C)</h3>
+        <canvas id="tempChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3>💧 Humidity (%)</h3>
+        <canvas id="humidityChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <h3>🌊 Soil Moisture (%)</h3>
+        <canvas id="moistureChart"></canvas>
+    </div>
+
+    <script>
+        const createChart = (ctx, label, borderColor, lower, upper) => {
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: label,
+                            data: [],
+                            borderColor: borderColor,
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: "Lower Limit",
+                            data: [],
+                            borderColor: "green",
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: "Upper Limit",
+                            data: [],
+                            borderColor: "red",
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            borderWidth: 1,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    animation: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: { autoSkip: true },
+                            title: { display: true, text: 'Time' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            title: { display: true, text: 'Value' }
+                        }
+                    }
+                }
+            });
+        };
+
+        const tempChart = createChart(
+            document.getElementById('tempChart').getContext('2d'),
+            "Temperature",
+            "rgba(255, 99, 132, 1)",
+            15, 24
+        );
+        const humidityChart = createChart(
+            document.getElementById('humidityChart').getContext('2d'),
+            "Humidity",
+            "rgba(54, 162, 235, 1)",
+            60, 80
+        );
+        const moistureChart = createChart(
+            document.getElementById('moistureChart').getContext('2d'),
+            "Soil Moisture",
+            "rgba(75, 192, 192, 1)",
+            65, 80
+        );
+
+        async function updateCharts() {
+            const res = await fetch("/api/live_stream");
+            const data = await res.json();
+            const ts = new Date(data.timestamp).toLocaleTimeString();
+
+            const pushData = (chart, value, lower, upper) => {
+                chart.data.labels.push(ts);
+                chart.data.datasets[0].data.push(value);
+                chart.data.datasets[1].data.push(lower);
+                chart.data.datasets[2].data.push(upper);
+                chart.update();
+            };
+
+            pushData(tempChart, data.temperature, 15, 24);
+            pushData(humidityChart, data.humidity, 60, 80);
+            pushData(moistureChart, data.soil_moisture, 65, 80);
+        }
+
+        setInterval(updateCharts, 5000);
+    </script>
+</body>
+
+</html>
